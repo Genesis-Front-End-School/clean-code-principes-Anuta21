@@ -1,5 +1,5 @@
 import Hls from "hls.js";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { unlockedStatus } from "./constants";
 import { ILesson } from "../../services";
@@ -32,15 +32,16 @@ export const LessonCardComponent: React.FC<ILesson> = ({
   );
   const { setLessonProgress } = coursePageSlice.actions;
 
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
   useEffect(() => {
     if (showVideo) {
-      var video = document.getElementById(`video-${order}`);
-      if (Hls.isSupported() && video instanceof HTMLMediaElement) {
+      if (Hls.isSupported() && videoRef.current instanceof HTMLMediaElement) {
         var hls = new Hls();
 
         try {
           hls.loadSource(link);
-          hls.attachMedia(video);
+          hls.attachMedia(videoRef.current);
           hls.on(Hls.Events.ERROR, function (event, data) {
             if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
               setShowErrorMessage(true);
@@ -50,11 +51,11 @@ export const LessonCardComponent: React.FC<ILesson> = ({
           navigate("/error/");
         }
 
-        video.currentTime = coursesProgress[courseId]
+        videoRef.current.currentTime = coursesProgress[courseId]
           ? coursesProgress[courseId][id]
           : 0;
 
-        video.addEventListener("timeupdate", function () {
+        videoRef.current.addEventListener("timeupdate", function () {
           dispatch(
             setLessonProgress({
               courseId,
@@ -67,18 +68,17 @@ export const LessonCardComponent: React.FC<ILesson> = ({
     }
   }, [downloadVideo]);
 
+  const handleClick = () => {
+    if (status === unlockedStatus) {
+      setShowVideo(!showVideo);
+      setDownloadVideo(true);
+    }
+  };
+
   return (
     <>
       <Title unlocked={status === unlockedStatus}>
-        <div
-          style={{ marginLeft: "20px" }}
-          onClick={() => {
-            if (status === unlockedStatus) {
-              setShowVideo(!showVideo);
-              setDownloadVideo(true);
-            }
-          }}
-        >
+        <div style={{ marginLeft: "20px" }} onClick={handleClick}>
           Lesson {order} - {title}
         </div>
         <LockOutlined
@@ -94,10 +94,10 @@ export const LessonCardComponent: React.FC<ILesson> = ({
           <>
             <Video
               show={showVideo}
-              id={`video-${order}`}
+              ref={videoRef}
               poster={`${previewImageLink}/lesson-${order}.webp`}
               controls
-            ></Video>
+            />
             <div
               style={{
                 color: Colors.Red,

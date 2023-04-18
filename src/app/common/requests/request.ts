@@ -9,11 +9,6 @@ export class RequestBuilder {
     this.setDefaultOptions();
   }
 
-  public setBaseUrl(url?: string) {
-    this.requestOptions.baseURL = url;
-    return this;
-  }
-
   public setHeaders(headers?: { [key: string]: string }) {
     this.requestOptions.headers = {
       "Content-Type": "application/json; charset=utf-8",

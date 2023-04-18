@@ -45,7 +45,6 @@ export const CoursesListPage: React.FC = () => {
           dispatch(setToken(responseData.token));
           return responseData.token;
         } catch (error) {
-          console.log(error);
           return;
         }
       }
@@ -54,9 +53,7 @@ export const CoursesListPage: React.FC = () => {
         try {
           const responseData = (await client.courses.getCourses(token)).data;
           setCourses(responseData.courses.reverse());
-          console.log(responseData);
         } catch (error) {
-          console.log(error);
           if (error instanceof AxiosError) {
             if (error.response?.status === 401) {
               return authErrorResponse;
@@ -77,6 +74,11 @@ export const CoursesListPage: React.FC = () => {
     getData();
   }, []);
 
+  const handleClick = (courseId: string) => {
+    dispatch(setCourseId(courseId));
+    navigate(`/courses/course?courseId=${courseId}`);
+  };
+
   return (
     <Wrapper>
       {courses.length > 0 ? (
@@ -85,9 +87,8 @@ export const CoursesListPage: React.FC = () => {
             {courses
               .slice(coursesArrayBounds.start, coursesArrayBounds.end)
               .map((course) => (
-                <div style={{ marginTop: "20px" }}>
+                <div key={course.id} style={{ marginTop: "20px" }}>
                   <CourseCardComponent
-                    key={course.id}
                     id={course.id}
                     title={course.title}
                     imageLink={`${course.previewImageLink}/cover.webp`}
@@ -95,10 +96,7 @@ export const CoursesListPage: React.FC = () => {
                     lessonsCount={course.lessonsCount}
                     skills={course.meta.skills}
                     rating={course.rating}
-                    onClickFunction={() => {
-                      dispatch(setCourseId(course.id));
-                      navigate(`/courses/course?courseId=${course.id}`);
-                    }}
+                    onClickFunction={() => handleClick(course.id)}
                   />
                 </div>
               ))}
