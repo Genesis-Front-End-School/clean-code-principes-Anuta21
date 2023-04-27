@@ -14,6 +14,10 @@ export const Title = styled.div`
   }
 `;
 
+export const TextContainer = styled.div`
+  margin: 5px 0 0 20px;
+`;
+
 export const Content = styled.div`
   position: relative;
   margin: 20px 0px 0px 20px;
@@ -84,4 +88,12 @@ export const Button = styled.button`
   @media (max-device-width: 480px) {
     bottom: 45px;
   }
+`;
+
+export const ButtonText = styled.div`
+  color: ${Colors.White};
+`;
+
+export const ParamContainer = styled.div`
+  margin-top: 10px;
 `;

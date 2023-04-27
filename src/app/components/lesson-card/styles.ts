@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { Colors } from "../../common/assets";
-import { IContent, ITitleProps } from "./models";
+import { IContent, IErrorMessageProps, ITitleProps } from "./models";
+import { LockOutlined } from "@mui/icons-material";
 
 export const Title = styled.div<ITitleProps>`
   height: 40px;
@@ -40,4 +41,18 @@ export const Video = styled.video<IContent>`
     height: ${(props) => (props.show ? "250px" : "0px")};
     max-width: 90vw;
   }
+`;
+
+export const ErrorMessage = styled.div<IErrorMessageProps>`
+  color: ${Colors.Red};
+  opacity: ${(props) => (props.showErrorMessage ? "1" : "0")};
+`;
+
+export const LessonTitle = styled.div`
+  margin-left: 20px;
+`;
+
+export const Lock = styled(LockOutlined)<ITitleProps>`
+  opacity: ${(props) => (props.unlocked ? "0" : "1")};
+  margin-left: "10px";
 `;

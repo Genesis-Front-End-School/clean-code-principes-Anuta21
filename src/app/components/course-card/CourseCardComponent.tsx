@@ -1,6 +1,5 @@
 import React from "react";
-import { Colors } from "../../common/assets";
-import { ICourseCardProps } from "./models";
+import { ICardParamsComponentProps, ICourseCardProps } from "./models";
 import {
   Description,
   Title,
@@ -10,6 +9,9 @@ import {
   ParamsComponent,
   Button,
   DescriptionText,
+  TextContainer,
+  ButtonText,
+  ParamContainer,
 } from "./styles";
 
 export const CourseCardComponent: React.FC<ICourseCardProps> = ({
@@ -25,36 +27,51 @@ export const CourseCardComponent: React.FC<ICourseCardProps> = ({
   return (
     <Wrapper>
       <Title>
-        <div style={{ margin: "5px 0px 0px 20px" }}>{title}</div>
+        <TextContainer>{title}</TextContainer>
       </Title>
       <Content>
         <Image src={imageLink}></Image>
         <Description>
           <DescriptionText>{description}</DescriptionText>
         </Description>
-        <ParamsComponent>
-          <div style={{ margin: "5px 0px 0px 20px" }}>
-            <div>Lessons: {lessonsCount}</div>
-            <div style={{ marginTop: "10px" }}>
-              {skills ? (
-                <>
-                  Skills:
-                  {skills.map((skill, id) => (
-                    <li key={id}>{skill}</li>
-                  ))}{" "}
-                </>
-              ) : (
-                <>No skills</>
-              )}
-            </div>
-
-            <div style={{ marginTop: "10px" }}>Rating: {rating}</div>
-          </div>
-        </ParamsComponent>
+        <CardParamsComponent
+          lessonsCount={lessonsCount}
+          skills={skills}
+          rating={rating}
+        />
         <Button onClick={() => onClickFunction(id)}>
-          <div style={{ color: Colors.White }}>Choose</div>
+          <ButtonText>Choose</ButtonText>
         </Button>
       </Content>
     </Wrapper>
+  );
+};
+
+export const CardParamsComponent: React.FC<ICardParamsComponentProps> = ({
+  lessonsCount,
+  skills,
+  rating,
+}) => {
+  const skillsList = () => {
+    return skills ? (
+      <>
+        Skills:
+        {skills.map((skill, id) => (
+          <li key={id}>{skill}</li>
+        ))}
+      </>
+    ) : (
+      <>No skills</>
+    );
+  };
+
+  return (
+    <ParamsComponent>
+      <TextContainer>
+        <div>Lessons: {lessonsCount}</div>
+        <ParamContainer>{skillsList()}</ParamContainer>
+        <ParamContainer>Rating: {rating}</ParamContainer>
+      </TextContainer>
+    </ParamsComponent>
   );
 };

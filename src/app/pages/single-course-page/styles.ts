@@ -40,3 +40,15 @@ export const BackButton = styled.button`
     transform: translate(4vw, 2vh);
   }
 `;
+
+export const CircularProgressWrapper = styled.div`
+  transform: translateY(40vh);
+`;
+
+export const CourseParamsWrapper = styled.div`
+  margin: 20px 0 20px 0;
+`;
+
+export const RatingWrapper = styled.div`
+  margin-bottom: 20px;
+`;
