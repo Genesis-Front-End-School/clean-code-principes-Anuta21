@@ -26,20 +26,20 @@ export const CoursePage: React.FC = () => {
           <video
             ref={videoRef}
             width="400px"
-            poster={`${courseData.meta.courseVideoPreview?.previewImageLink}/preview.webp`}
+            poster={`${courseData?.meta?.courseVideoPreview?.previewImageLink}/preview.webp`}
             controls
           />
         )}
 
-        <Description>{courseData.description}</Description>
+        <Description>{courseData?.description}</Description>
         <CourseParams courseData={courseData} />
       </Wrapper>
 
       {courseData?.lessons.map((lesson: ILesson) => (
         <LessonCardComponent
           key={lesson.id}
-          id={lesson?.id}
-          title={lesson?.title}
+          id={lesson.id}
+          title={lesson.title}
           status={lesson.status}
           link={lesson.link}
           order={lesson.order}
