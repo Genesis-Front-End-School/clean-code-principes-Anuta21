@@ -1,4 +1,3 @@
-import { AxiosError } from "axios";
 import Hls from "hls.js";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -9,9 +8,10 @@ import {
   useAppSelector,
 } from "../../redux";
 import { Client, IGetCourse } from "../../services";
-import { authErrorResponse } from "../../services/controllers/constants";
+import { authErrorResponse } from "../../services/constants";
 import { unlockedStatus } from "../../components/lesson-card/constants";
 import { courseType } from "./models";
+import { baseErrorResponse } from "../../services/constants";
 
 export const useCourse: courseType = () => {
   const { token, courseId } = useAppSelector(
@@ -35,41 +35,15 @@ export const useCourse: courseType = () => {
 
   useEffect(() => {
     async function getData() {
-      async function getToken() {
-        try {
-          const responseData = (await client.auth.getToken()).data;
-          dispatch(setToken(responseData.token));
-          return responseData.token;
-        } catch (error) {
-          return;
-        }
-      }
+      let getCourseResponse = await client.getCourse(courseId, token);
 
-      async function getCourse(token: string) {
-        try {
-          const responseData = (await client.courses.getCourse(courseId, token))
-            .data;
-          const lessons = responseData.lessons.sort(
-            (a, b) => a.order - b.order
-          );
-          responseData.lessons = lessons.slice();
-          setCourseData(responseData);
-        } catch (error) {
-          if (error instanceof AxiosError) {
-            if (error.response?.status === 401) {
-              return authErrorResponse;
-            } else {
-              navigate("/error/");
-            }
-          }
-        }
-      }
-
-      const response = await getCourse(token);
-      if (response === authErrorResponse) {
-        const newToken = await getToken();
-        await getCourse(newToken);
-      }
+      if (getCourseResponse && typeof getCourseResponse !== "string")
+        setCourseData(getCourseResponse);
+      else if (getCourseResponse === authErrorResponse) {
+        const newToken = await client.getToken();
+        dispatch(setToken(newToken as string));
+        getData();
+      } else if (getCourseResponse === baseErrorResponse) navigate("/error/");
     }
 
     getData();

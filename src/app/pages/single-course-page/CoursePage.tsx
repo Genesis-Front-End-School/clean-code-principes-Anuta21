@@ -5,13 +5,12 @@ import {
   Description,
   BackButton,
   CircularProgressWrapper,
-  CourseParamsWrapper,
-  RatingWrapper,
 } from "./styles";
 import { LessonCardComponent } from "../../components/lesson-card";
 import { CircularProgress } from "@mui/material";
 import { useCourse } from "./hooks";
-import { ICourseParams } from "./models";
+import { CourseParams } from "./components/CourseParamsComponent";
+import { ILesson } from "../../services";
 
 export const CoursePage: React.FC = () => {
   const { courseData, videoRef } = useCourse();
@@ -22,12 +21,12 @@ export const CoursePage: React.FC = () => {
     <>
       <BackButton onClick={() => navigate(-1)}>Go Back</BackButton>
       <Wrapper>
-        <Title>{courseData.title}</Title>
-        {courseData.meta.courseVideoPreview && (
+        <Title>{courseData?.title}</Title>
+        {courseData?.meta?.courseVideoPreview && (
           <video
             ref={videoRef}
             width="400px"
-            poster={`${courseData.meta.courseVideoPreview.previewImageLink}/preview.webp`}
+            poster={`${courseData.meta.courseVideoPreview?.previewImageLink}/preview.webp`}
             controls
           />
         )}
@@ -36,11 +35,11 @@ export const CoursePage: React.FC = () => {
         <CourseParams courseData={courseData} />
       </Wrapper>
 
-      {courseData.lessons.map((lesson) => (
+      {courseData?.lessons.map((lesson: ILesson) => (
         <LessonCardComponent
           key={lesson.id}
-          id={lesson.id}
-          title={lesson.title}
+          id={lesson?.id}
+          title={lesson?.title}
           status={lesson.status}
           link={lesson.link}
           order={lesson.order}
@@ -54,24 +53,5 @@ export const CoursePage: React.FC = () => {
         <CircularProgress size="100px" />
       </CircularProgressWrapper>
     </Wrapper>
-  );
-};
-
-export const CourseParams: React.FC<ICourseParams> = ({ courseData }) => {
-  return (
-    <CourseParamsWrapper>
-      <>Lessons Number: {courseData.lessons.length}</>
-      <RatingWrapper>Rating: {courseData.rating}</RatingWrapper>
-      {courseData.meta.skills ? (
-        <>
-          Skills:
-          {courseData.meta.skills.map((skill, id) => (
-            <li key={id}>{skill}</li>
-          ))}
-        </>
-      ) : (
-        <>No skills</>
-      )}
-    </CourseParamsWrapper>
   );
 };

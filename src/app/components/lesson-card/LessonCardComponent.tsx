@@ -1,4 +1,3 @@
-import React from "react";
 import { unlockedStatus } from "./constants";
 import { ILesson } from "../../services";
 import {
@@ -27,7 +26,7 @@ export const LessonCardComponent: React.FC<ILesson> = ({
     showErrorMessage,
   } = useVideo(id, link);
 
-  const handleClick = () => {
+  const handleClick: () => void = () => {
     if (status === unlockedStatus) {
       setShowVideo(!showVideo);
       setDownloadVideo(true);

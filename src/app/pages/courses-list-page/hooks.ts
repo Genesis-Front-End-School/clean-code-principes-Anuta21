@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { Client, ICourse } from "../../services";
 import { useNavigate } from "react-router-dom";
-import { AxiosError } from "axios";
-import { authErrorResponse } from "../../services/controllers/constants";
+import { authErrorResponse, baseErrorResponse } from "../../services/constants";
 import { coursesListPageSlice, useAppSelector } from "../../redux";
 import { useDispatch } from "react-redux";
 import { IArrayBounds, useCoursesListType } from "./models";
@@ -37,37 +36,16 @@ export const useCoursesList: useCoursesListType = () => {
   }, [currentPage, courses]);
 
   useEffect(() => {
-    async function getData() {
-      async function getToken() {
-        try {
-          const responseData = (await client.auth.getToken()).data;
-          dispatch(setToken(responseData.token));
-          return responseData.token;
-        } catch (error) {
-          return;
-        }
-      }
+    async function getData(): Promise<void> {
+      let getCoursesResponse = await client.getCourses(token);
 
-      async function getCourses(token: string) {
-        try {
-          const responseData = (await client.courses.getCourses(token)).data;
-          setCourses(responseData.courses.reverse());
-        } catch (error) {
-          if (error instanceof AxiosError) {
-            if (error.response?.status === 401) {
-              return authErrorResponse;
-            } else {
-              navigate("/error/");
-            }
-          }
-        }
-      }
-
-      const response = await getCourses(token);
-      if (response === authErrorResponse) {
-        const newToken = await getToken();
-        await getCourses(newToken);
-      }
+      if (getCoursesResponse && typeof getCoursesResponse !== "string")
+        setCourses(getCoursesResponse);
+      else if (getCoursesResponse === authErrorResponse) {
+        const newToken = await client.getToken();
+        dispatch(setToken(newToken as string));
+        getData();
+      } else if (getCoursesResponse === baseErrorResponse) navigate("/error/");
     }
 
     getData();

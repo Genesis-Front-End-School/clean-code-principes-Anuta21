@@ -1,18 +1,16 @@
-import React from "react";
-import { ICardParamsComponentProps, ICourseCardProps } from "./models";
+import { ICourseCardProps } from "../models";
 import {
   Description,
   Title,
   Image,
   Wrapper,
   Content,
-  ParamsComponent,
   Button,
   DescriptionText,
   TextContainer,
   ButtonText,
-  ParamContainer,
-} from "./styles";
+} from "../styles";
+import { CardParamsComponent } from "./CardParamsComponent";
 
 export const CourseCardComponent: React.FC<ICourseCardProps> = ({
   id,
@@ -44,34 +42,5 @@ export const CourseCardComponent: React.FC<ICourseCardProps> = ({
         </Button>
       </Content>
     </Wrapper>
-  );
-};
-
-export const CardParamsComponent: React.FC<ICardParamsComponentProps> = ({
-  lessonsCount,
-  skills,
-  rating,
-}) => {
-  const skillsList = () => {
-    return skills ? (
-      <>
-        Skills:
-        {skills.map((skill, id) => (
-          <li key={id}>{skill}</li>
-        ))}
-      </>
-    ) : (
-      <>No skills</>
-    );
-  };
-
-  return (
-    <ParamsComponent>
-      <TextContainer>
-        <div>Lessons: {lessonsCount}</div>
-        <ParamContainer>{skillsList()}</ParamContainer>
-        <ParamContainer>Rating: {rating}</ParamContainer>
-      </TextContainer>
-    </ParamsComponent>
   );
 };

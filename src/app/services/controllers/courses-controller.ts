@@ -1,10 +1,11 @@
+import { AxiosResponse } from "axios";
 import { RequestBuilder } from "../../common";
 import { IGetCourse, IGetCoursesResponse } from "./models";
 
 export class CoursesController {
   private searchUrl = `https://api.wisey.app/api/v1/core/preview-courses`;
 
-  getCourses(token: string) {
+  getCourses(token: string): Promise<AxiosResponse<IGetCoursesResponse, any>> {
     const path = `${this.searchUrl}`;
     return new RequestBuilder()
       .setHeaders({
@@ -13,7 +14,10 @@ export class CoursesController {
       .get<IGetCoursesResponse>(path);
   }
 
-  getCourse(courseId: string, token: string) {
+  getCourse(
+    courseId: string,
+    token: string
+  ): Promise<AxiosResponse<IGetCourse, any>> {
     const path = `${this.searchUrl}/${courseId}`;
     return new RequestBuilder()
       .setHeaders({
