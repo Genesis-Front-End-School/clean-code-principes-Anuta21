@@ -1,167 +1,57 @@
-import { AxiosError } from "axios";
-import Hls from "hls.js";
-import { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
-  coursePageSlice,
-  coursesListPageSlice,
-  useAppSelector,
-} from "../../redux";
-import { Client, IGetCourse } from "../../services";
-import { authErrorResponse } from "../../services/controllers/constants";
-import { Title, Wrapper, Description, BackButton } from "./styles";
+  Title,
+  Wrapper,
+  Description,
+  BackButton,
+  CircularProgressWrapper,
+} from "./styles";
 import { LessonCardComponent } from "../../components/lesson-card";
 import { CircularProgress } from "@mui/material";
-import { unlockedStatus } from "../../components/lesson-card/constants";
+import { useCourse } from "./hooks";
+import { CourseParams } from "./components/CourseParamsComponent";
+import { ILesson } from "../../services";
 
 export const CoursePage: React.FC = () => {
-  const { token, courseId } = useAppSelector(
-    (state) => state.persistedReducer.coursesListPage
-  );
-  const { coursesProgress } = useAppSelector(
-    (state) => state.persistedReducer.coursePage
-  );
-  const { setToken } = coursesListPageSlice.actions;
-  const { setCourseProgress, setLessonProgress } = coursePageSlice.actions;
-  const dispatch = useDispatch();
+  const { courseData, videoRef } = useCourse();
 
-  const client = new Client();
   const navigate = useNavigate();
-  const [courseData, setCourseData] = useState({} as IGetCourse);
-
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-
-  useEffect(() => {
-    async function getData() {
-      async function getToken() {
-        try {
-          const responseData = (await client.auth.getToken()).data;
-          dispatch(setToken(responseData.token));
-          return responseData.token;
-        } catch (error) {
-          return;
-        }
-      }
-
-      async function getCourse(token: string) {
-        try {
-          const responseData = (await client.courses.getCourse(courseId, token))
-            .data;
-          const lessons = responseData.lessons.sort(
-            (a, b) => a.order - b.order
-          );
-          responseData.lessons = lessons.slice();
-          setCourseData(responseData);
-        } catch (error) {
-          if (error instanceof AxiosError) {
-            if (error.response?.status === 401) {
-              return authErrorResponse;
-            } else {
-              navigate("/error/");
-            }
-          }
-        }
-      }
-
-      const response = await getCourse(token);
-      if (response === authErrorResponse) {
-        const newToken = await getToken();
-        await getCourse(newToken);
-      }
-    }
-
-    getData();
-  }, []);
-
-  useEffect(() => {
-    if (courseData.lessons) {
-      if (!coursesProgress[courseId]) {
-        const unlockedLessons = courseData.lessons.filter(
-          (lesson) => lesson.status === unlockedStatus
-        );
-        const courseProgress = unlockedLessons.reduce(
-          (arr, lesson) => ({ ...arr, [lesson.id]: 0 }),
-          { preview: 0 }
-        );
-        dispatch(setCourseProgress({ courseId, courseProgress }));
-      }
-    }
-
-    if (Hls.isSupported() && videoRef.current) {
-      var hls = new Hls();
-      hls.loadSource(courseData.meta.courseVideoPreview.link);
-      hls.attachMedia(videoRef.current);
-      videoRef.current.currentTime = coursesProgress[courseId]
-        ? coursesProgress[courseId]["preview"]
-        : 0;
-
-      videoRef.current.addEventListener("timeupdate", function () {
-        dispatch(
-          setLessonProgress({
-            courseId,
-            lessonId: "preview",
-            lessonProgressTime: this.currentTime,
-          })
-        );
-      });
-    }
-  }, [courseData]);
 
   return Object.keys(courseData).length !== 0 ? (
     <>
       <BackButton onClick={() => navigate(-1)}>Go Back</BackButton>
       <Wrapper>
-        <Title>{courseData.title}</Title>
-        {courseData.meta.courseVideoPreview ? (
+        <Title>{courseData?.title}</Title>
+        {courseData?.meta?.courseVideoPreview && (
           <video
             ref={videoRef}
             width="400px"
-            poster={`${courseData.meta.courseVideoPreview.previewImageLink}/preview.webp`}
+            poster={`${courseData?.meta?.courseVideoPreview?.previewImageLink}/preview.webp`}
             controls
           />
-        ) : (
-          <div />
         )}
 
-        <Description>{courseData.description}</Description>
-        <div style={{ margin: "20px 0px 20px 0px" }}>
-          <>Lessons Number: {courseData.lessons.length}</>
-          <div style={{ marginBottom: "20px" }}>
-            Rating: {courseData.rating}
-          </div>
-          {courseData.meta.skills ? (
-            <>
-              Skills:
-              {courseData.meta.skills.map((skill, id) => (
-                <li key={id}>{skill}</li>
-              ))}{" "}
-            </>
-          ) : (
-            <>No skills</>
-          )}
-        </div>
+        <Description>{courseData?.description}</Description>
+        <CourseParams courseData={courseData} />
       </Wrapper>
 
-      <div>
-        {courseData.lessons.map((lesson) => (
-          <LessonCardComponent
-            key={lesson.id}
-            id={lesson.id}
-            title={lesson.title}
-            status={lesson.status}
-            link={lesson.link}
-            order={lesson.order}
-            previewImageLink={lesson.previewImageLink}
-          />
-        ))}
-      </div>
+      {courseData?.lessons.map((lesson: ILesson) => (
+        <LessonCardComponent
+          key={lesson.id}
+          id={lesson.id}
+          title={lesson.title}
+          status={lesson.status}
+          link={lesson.link}
+          order={lesson.order}
+          previewImageLink={lesson.previewImageLink}
+        />
+      ))}
     </>
   ) : (
     <Wrapper>
-      <div style={{ transform: "translateY(40vh)" }}>
+      <CircularProgressWrapper>
         <CircularProgress size="100px" />
-      </div>
+      </CircularProgressWrapper>
     </Wrapper>
   );
 };

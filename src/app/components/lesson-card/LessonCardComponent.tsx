@@ -1,13 +1,14 @@
-import Hls from "hls.js";
-import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { unlockedStatus } from "./constants";
 import { ILesson } from "../../services";
-import { Title, Content, Video } from "./styles";
-import { LockOutlined } from "@mui/icons-material";
-import { useDispatch } from "react-redux";
-import { coursePageSlice, useAppSelector } from "../../redux";
-import { Colors } from "../../common/assets";
+import {
+  Title,
+  Content,
+  Video,
+  ErrorMessage,
+  LessonTitle,
+  Lock,
+} from "./styles";
+import { useVideo } from "./hooks";
 
 export const LessonCardComponent: React.FC<ILesson> = ({
   id,
@@ -17,58 +18,15 @@ export const LessonCardComponent: React.FC<ILesson> = ({
   status,
   title,
 }) => {
-  const [showVideo, setShowVideo] = useState(false);
-  const [downloadVideo, setDownloadVideo] = useState(false);
-  const [showErrorMessage, setShowErrorMessage] = useState(false);
+  const {
+    showVideo,
+    setShowVideo,
+    setDownloadVideo,
+    videoRef,
+    showErrorMessage,
+  } = useVideo(id, link);
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const { courseId } = useAppSelector(
-    (state) => state.persistedReducer.coursesListPage
-  );
-  const { coursesProgress } = useAppSelector(
-    (state) => state.persistedReducer.coursePage
-  );
-  const { setLessonProgress } = coursePageSlice.actions;
-
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-
-  useEffect(() => {
-    if (showVideo) {
-      if (Hls.isSupported() && videoRef.current instanceof HTMLMediaElement) {
-        var hls = new Hls();
-
-        try {
-          hls.loadSource(link);
-          hls.attachMedia(videoRef.current);
-          hls.on(Hls.Events.ERROR, function (event, data) {
-            if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-              setShowErrorMessage(true);
-            }
-          });
-        } catch {
-          navigate("/error/");
-        }
-
-        videoRef.current.currentTime = coursesProgress[courseId]
-          ? coursesProgress[courseId][id]
-          : 0;
-
-        videoRef.current.addEventListener("timeupdate", function () {
-          dispatch(
-            setLessonProgress({
-              courseId,
-              lessonId: id,
-              lessonProgressTime: this.currentTime,
-            })
-          );
-        });
-      }
-    }
-  }, [downloadVideo]);
-
-  const handleClick = () => {
+  const handleClick: () => void = () => {
     if (status === unlockedStatus) {
       setShowVideo(!showVideo);
       setDownloadVideo(true);
@@ -78,15 +36,10 @@ export const LessonCardComponent: React.FC<ILesson> = ({
   return (
     <>
       <Title unlocked={status === unlockedStatus}>
-        <div style={{ marginLeft: "20px" }} onClick={handleClick}>
+        <LessonTitle onClick={handleClick}>
           Lesson {order} - {title}
-        </div>
-        <LockOutlined
-          style={{
-            opacity: status === unlockedStatus ? "0" : "1",
-            marginLeft: "10px",
-          }}
-        />
+        </LessonTitle>
+        <Lock unlocked={status === unlockedStatus} />
       </Title>
 
       <Content show={showVideo}>
@@ -98,14 +51,9 @@ export const LessonCardComponent: React.FC<ILesson> = ({
               poster={`${previewImageLink}/lesson-${order}.webp`}
               controls
             />
-            <div
-              style={{
-                color: Colors.Red,
-                opacity: showErrorMessage ? "1" : "0",
-              }}
-            >
+            <ErrorMessage showErrorMessage={showErrorMessage}>
               Failed to load media content
-            </div>
+            </ErrorMessage>
           </>
         )}
       </Content>

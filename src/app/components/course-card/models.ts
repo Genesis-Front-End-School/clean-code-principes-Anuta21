@@ -8,3 +8,9 @@ export interface ICourseCardProps {
   rating: number;
   onClickFunction: (courseId: string) => void;
 }
+
+export interface ICardParamsComponentProps {
+  lessonsCount: number;
+  skills: Array<string>;
+  rating: number;
+}

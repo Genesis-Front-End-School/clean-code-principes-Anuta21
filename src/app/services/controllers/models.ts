@@ -35,3 +35,7 @@ export interface IGetCourse extends ICourse {
   lessons: Array<ILesson>;
   meta: IMeta;
 }
+
+export interface IGetToken {
+  token: string;
+}
