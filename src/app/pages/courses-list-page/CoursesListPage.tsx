@@ -18,6 +18,7 @@ export const CoursesListPage: React.FC = () => {
           />
           <PaginationWrapper>
             <Pagination
+              aria-label="pagination"
               count={Math.ceil(courses.length / maxCoursesNumberOnPage)}
               page={currentPage}
               onChange={(e, page) => setCurrentPage(page)}
@@ -28,7 +29,7 @@ export const CoursesListPage: React.FC = () => {
         </>
       ) : (
         <CircularProgressWrapper>
-          <CircularProgress size="100px" />
+          <CircularProgress size="100px" aria-label="spinner" />
         </CircularProgressWrapper>
       )}
     </Wrapper>

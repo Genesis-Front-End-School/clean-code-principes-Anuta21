@@ -1,1 +1,1 @@
-export * from "./SkillsListComponents";
+export * from "./SkillsListComponent";

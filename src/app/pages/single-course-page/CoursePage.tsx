@@ -32,10 +32,14 @@ export const CoursePage: React.FC = () => {
         )}
 
         <Description>{courseData?.description}</Description>
-        <CourseParams courseData={courseData} />
+        <CourseParams
+          lessonsNumber={courseData?.lessons?.length}
+          rating={courseData?.rating}
+          skills={courseData?.meta?.skills}
+        />
       </Wrapper>
 
-      {courseData?.lessons.map((lesson: ILesson) => (
+      {courseData?.lessons?.map((lesson: ILesson) => (
         <LessonCardComponent
           key={lesson.id}
           id={lesson.id}
@@ -50,7 +54,7 @@ export const CoursePage: React.FC = () => {
   ) : (
     <Wrapper>
       <CircularProgressWrapper>
-        <CircularProgress size="100px" />
+        <CircularProgress size="100px" aria-label="spinner" />
       </CircularProgressWrapper>
     </Wrapper>
   );
