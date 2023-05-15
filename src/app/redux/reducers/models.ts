@@ -25,3 +25,7 @@ export interface ISetLessonProgress {
   lessonId: string;
   lessonProgressTime: number;
 }
+
+export interface ICommonReducerState {
+  darkMode: boolean;
+}

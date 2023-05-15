@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { coursePageSlice, coursesListPageSlice } from "./reducers";
+import { commonSlice, coursePageSlice, coursesListPageSlice } from "./reducers";
 
 const persistConfig = {
   key: "root",
@@ -11,6 +11,7 @@ const persistConfig = {
 const reducersToPersist = combineReducers({
   coursesListPage: coursesListPageSlice.reducer,
   coursePage: coursePageSlice.reducer,
+  common: commonSlice.reducer,
 });
 const persistedReducer = persistReducer(persistConfig, reducersToPersist);
 

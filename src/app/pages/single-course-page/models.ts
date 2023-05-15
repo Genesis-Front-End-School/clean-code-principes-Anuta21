@@ -12,3 +12,7 @@ export interface ICourseParams {
   rating: number;
   skills: Array<string>;
 }
+
+export interface IWrapperProps {
+  darkMode: boolean;
+}

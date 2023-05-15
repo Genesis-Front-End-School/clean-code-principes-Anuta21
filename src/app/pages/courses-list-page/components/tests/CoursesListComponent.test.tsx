@@ -13,6 +13,7 @@ describe("CoursesList component", () => {
           <CoursesListComponent
             courses={courses}
             coursesArrayBounds={coursesArrayBounds}
+            darkMode={true}
           />
         </Provider>
       </Router>

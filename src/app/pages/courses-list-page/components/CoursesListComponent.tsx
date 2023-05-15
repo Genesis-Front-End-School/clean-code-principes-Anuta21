@@ -8,6 +8,7 @@ import { ICoursesListComponent } from "../models";
 export const CoursesListComponent: React.FC<ICoursesListComponent> = ({
   courses,
   coursesArrayBounds,
+  darkMode,
 }) => {
   const { setCourseId } = coursesListPageSlice.actions;
 
@@ -34,6 +35,7 @@ export const CoursesListComponent: React.FC<ICoursesListComponent> = ({
               skills={course?.meta?.skills}
               rating={course?.rating}
               onClickFunction={() => handleClick(course?.id)}
+              darkMode={darkMode}
             />
           </CourseCardComponentWrapper>
         ))}

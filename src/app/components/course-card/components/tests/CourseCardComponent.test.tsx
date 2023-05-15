@@ -23,6 +23,7 @@ describe("CourseCard component", () => {
         skills={skills}
         rating={rating}
         onClickFunction={onClickFunction}
+        darkMode={true}
       />
     );
 

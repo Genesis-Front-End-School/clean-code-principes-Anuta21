@@ -17,4 +17,9 @@ export type useCoursesListType = () => IUseCoursesListReturn;
 export interface ICoursesListComponent {
   courses: ICourse[];
   coursesArrayBounds: IArrayBounds;
+  darkMode: boolean;
+}
+
+export interface IWrapperProps {
+  darkMode: boolean;
 }
