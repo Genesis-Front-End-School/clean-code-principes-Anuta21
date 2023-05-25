@@ -34,18 +34,19 @@ export const LessonCardComponent: React.FC<ILesson> = ({
   };
 
   return (
-    <>
+    <div aria-label="card">
       <Title unlocked={status === unlockedStatus}>
-        <LessonTitle onClick={handleClick}>
-          Lesson {order} - {title}
+        <LessonTitle aria-label="title" onClick={handleClick}>
+          {`Lesson ${order} - ${title}`}
         </LessonTitle>
-        <Lock unlocked={status === unlockedStatus} />
+        <Lock aria-label="lock" unlocked={status === unlockedStatus} />
       </Title>
 
       <Content show={showVideo}>
         {status === unlockedStatus && (
           <>
             <Video
+              aria-label="video"
               show={showVideo}
               ref={videoRef}
               poster={`${previewImageLink}/lesson-${order}.webp`}
@@ -57,6 +58,6 @@ export const LessonCardComponent: React.FC<ILesson> = ({
           </>
         )}
       </Content>
-    </>
+    </div>
   );
 };

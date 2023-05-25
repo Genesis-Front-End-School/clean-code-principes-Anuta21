@@ -8,5 +8,11 @@ interface ICourseReturn {
 export type courseType = () => ICourseReturn;
 
 export interface ICourseParams {
-  courseData: IGetCourse;
+  lessonsNumber: number;
+  rating: number;
+  skills: Array<string>;
+}
+
+export interface IWrapperProps {
+  darkMode: boolean;
 }

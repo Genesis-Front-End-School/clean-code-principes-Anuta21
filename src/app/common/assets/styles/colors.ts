@@ -4,4 +4,5 @@ export enum Colors {
   Grey = "#757780",
   Red = "#ed1c24",
   BlueGrey = "#19647e",
+  LightGrey = "#D3D3D3",
 }

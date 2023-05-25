@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Colors } from "../../common/assets";
+import { IWrapperProps } from "./models";
 
 export const Title = styled.div`
   height: 40px;
@@ -63,11 +64,11 @@ export const ParamsComponent = styled.div`
   font-size: 18px;
 `;
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<IWrapperProps>`
   height: 610px;
   width: 80vw;
 
-  background: ${Colors.Grey};
+  background: ${(props) => (props.darkMode ? Colors.Grey : Colors.LightGrey)};
   border-radius: 25px;
   overflow: hidden;
 `;

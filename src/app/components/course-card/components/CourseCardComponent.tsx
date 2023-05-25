@@ -21,9 +21,10 @@ export const CourseCardComponent: React.FC<ICourseCardProps> = ({
   skills,
   rating,
   onClickFunction,
+  darkMode,
 }) => {
   return (
-    <Wrapper>
+    <Wrapper darkMode={darkMode}>
       <Title>
         <TextContainer>{title}</TextContainer>
       </Title>

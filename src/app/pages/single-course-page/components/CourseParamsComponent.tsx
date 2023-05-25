@@ -2,12 +2,16 @@ import { CourseParamsWrapper, RatingWrapper } from "../styles";
 import { ICourseParams } from "../models";
 import { SkillsList } from "../../../components/skills-list";
 
-export const CourseParams: React.FC<ICourseParams> = ({ courseData }) => {
+export const CourseParams: React.FC<ICourseParams> = ({
+  lessonsNumber,
+  rating,
+  skills,
+}) => {
   return (
     <CourseParamsWrapper>
-      <>Lessons Number: {courseData.lessons.length}</>
-      <RatingWrapper>Rating: {courseData.rating}</RatingWrapper>
-      <SkillsList skills={courseData?.meta?.skills} />
+      <div>Lessons Number: {lessonsNumber}</div>
+      <RatingWrapper>Rating: {rating}</RatingWrapper>
+      <SkillsList skills={skills} />
     </CourseParamsWrapper>
   );
 };
