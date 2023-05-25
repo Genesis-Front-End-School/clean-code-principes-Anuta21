@@ -1,1 +1,1 @@
-export * from "./requests/request";
+export * from "./assets";
