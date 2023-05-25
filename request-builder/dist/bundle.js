@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('util'), require('stream'), require('path'), require('http'), require('https'), require('url'), require('fs'), require('assert'), require('tty'), require('os'), require('zlib'), require('events')) :
   typeof define === 'function' && define.amd ? define(['exports', 'util', 'stream', 'path', 'http', 'https', 'url', 'fs', 'assert', 'tty', 'os', 'zlib', 'events'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global["request-builder-ibrary"] = {}, global.util, global.stream, global.path, global.http, global.https, global.url, global.fs, global.assert, global.tty, global.os, global.zlib, global.EventEmitter));
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global["request-builder-library"] = {}, global.util, global.stream, global.path, global.http, global.https, global.url, global.fs, global.assert, global.tty, global.os, global.zlib, global.EventEmitter));
 })(this, (function (exports, util, stream, path, http, https, url, fs, assert, tty, os, zlib, EventEmitter) { 'use strict';
 
   function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }

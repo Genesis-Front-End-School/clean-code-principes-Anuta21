@@ -3,7 +3,7 @@ import { AxiosRequestConfig, ResponseType, default as Axios } from "axios";
 const axiosInstance = Axios.create();
 
 export class RequestBuilder {
-  private requestOptions: AxiosRequestConfig = {};
+  requestOptions: AxiosRequestConfig = {};
 
   constructor() {
     this.setDefaultOptions();
