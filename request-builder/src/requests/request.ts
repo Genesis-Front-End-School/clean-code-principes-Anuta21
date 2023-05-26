@@ -1,9 +1,9 @@
-import axios, { AxiosRequestConfig, ResponseType } from "axios";
+import { AxiosRequestConfig, ResponseType, default as Axios } from "axios";
 
-export const axiosInstance = axios.create();
+const axiosInstance = Axios.create();
 
 export class RequestBuilder {
-  private requestOptions: AxiosRequestConfig = {};
+  requestOptions: AxiosRequestConfig = {};
 
   constructor() {
     this.setDefaultOptions();

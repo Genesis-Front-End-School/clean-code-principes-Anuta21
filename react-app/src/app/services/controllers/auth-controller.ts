@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { RequestBuilder } from "../../common";
+import { RequestBuilder } from "request-builder-library/src";
 import { IGetToken } from "./models";
 
 export class AuthController {
